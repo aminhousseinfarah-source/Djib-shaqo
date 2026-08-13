@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Djib-Shaqo — Le port de l'emploi à Djibouti</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0A1E1B">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+  :root{
+    --abyss:#0A1E1B;
+    --reef:#123A35;
+    --turquoise:#1FA69B;
+    --turquoise-light:#7DD9CE;
+    --rust:#A8431C;
+    --rust-light:#D06A3E;
+    --gold:#C69A3C;
+    --salt:#F5F0E1;
+    --paper:#FFFDF7;
+    --text:#15241F;
+    --muted:#5C6E66;
+    --line:#E1D8C2;
+    --good:#2F7A4F;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-tap-highlight-color:transparent;}
+  body{
+    margin:0;
+    background:var(--salt);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;}
+  .display{font-family:'Fraunces',serif;}
+  a,button{font-family:inherit;}
+  button{cursor:pointer;border:none;background:none;color:inherit;}
+
+  /* Recurring coordinate stamp — the signature mark */
+  .coords{
+    font-family:'JetBrains Mono',monospace;
+    font-size:9.5px;
+    letter-spacing:0.06em;
+  }
+
+  /* HEADER */
+  header{
+    background:var(--abyss);
+    color:var(--salt);
+    padding:16px 20px 20px;
+    position:sticky;
+    top:0;
+    z-index:50;
+    border-bottom:1px solid rgba(125,217,206,0.18);
+  }
+  .header-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .brand-mark{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .brand-mark .knot{
+    width:30px;height:30px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--turquoise-light), var(--turquoise) 55%, var(--reef) 100%);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif;font-weight:900;font-size:14px;color:var(--abyss);
+    flex:0 0 auto;
+  }
+  .brand-mark .word{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:19px;
+    letter-spacing:-0.01em;
+    line-height:1;
+  }
+  .brand-mark .word em{font-style:italic;color:var(--rust-light);}
+  .header-row .coords{color:var(--turquoise-light);opacity:0.8;text-align:right;line-height:1.4;}
+
+  /* HERO */
+  .hero{
+    padding:38px 20px 30px;
+    background:
+      radial-gradient(circle at 88% -15%, rgba(31,166,155,0.4), transparent 50%),
+      repeating-linear-gradient(115deg, rgba(197,154,60,0.045) 0px, rgba(197,154,60,0.045) 1px, transparent 1px, transparent 34px),
+      var(--abyss);
+    color:var(--salt);
+    border-bottom:1px solid var(--reef);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;
+    color:var(--gold);
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    margin-bottom:14px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .hero .eyebrow::before{content:"";width:16px;height:1px;background:var(--gold);}
+  .hero h1{
+    font-family:'Fraunces',serif;
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size:clamp(30px,7.5vw,42px);
+    line-height:1.06;
+    margin:0 0 14px;
+    max-width:520px;
+    letter-spacing:-0.01em;
+  }
+  .hero h1 em{
+    font-style:italic;
+    font-weight:500;
+    color:var(--turquoise-light);
+  }
+  .hero p{
+    color:#B7C9C3;
+    font-size:15px;
+    line-height:1.55;
+    max-width:430px;
+    margin:0 0 24px;
+  }
+  .hero-actions{display:flex;gap:10px;flex-wrap:wrap;}
+  .btn{
+    padding:13px 20px;
+    border-radius:4px;
+    font-weight:600;
+    font-size:14px;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    transition:transform .12s ease, filter .12s ease, background .12s ease;
+  }
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{background:var(--rust);color:var(--paper);}
+  .btn-primary:hover{filter:brightness(1.1);}
+  .btn-secondary{background:transparent;color:var(--salt);border:1px solid rgba(245,240,225,0.32);}
+  .btn-secondary:hover{background:rgba(245,240,225,0.08);}
+
+  .manifest-count{
+    display:flex;
+    gap:26px;
+    margin-top:26px;
+    padding-top:18px;
+    border-top:1px dashed rgba(125,217,206,0.22);
+  }
+  .manifest-count div{font-family:'JetBrains Mono',monospace;}
+  .manifest-count .num{font-size:22px;font-weight:700;color:var(--salt);font-variant-numeric:tabular-nums;}
+  .manifest-count .lbl{font-size:9.5px;color:var(--turquoise-light);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;}
+
+  /* CONTROLS */
+  .controls{
+    padding:20px 20px 8px;
+    max-width:920px;
+    margin:0 auto;
+  }
+  .tabbar{
+    display:flex;
+    gap:5px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:4px;
+    margin-bottom:14px;
+  }
+  .tabbar button{
+    flex:1;
+    padding:10px 8px;
+    font-size:13px;
+    font-weight:600;
+    border-radius:6px;
+    color:var(--muted);
+    text-align:center;
+    transition:background .15s ease, color .15s ease;
+  }
+  .tabbar button.active{
+    background:var(--abyss);
+    color:var(--salt);
+  }
+
+  .filter-row{
+    display:flex;
+    gap:8px;
+    margin-bottom:12px;
+    overflow-x:auto;
+    padding-bottom:4px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .filter-row::-webkit-scrollbar{display:none;}
+  .chip{
+    flex:0 0 auto;
+    padding:7px 14px;
+    border-radius:20px;
+    font-size:12.5px;
+    font-weight:500;
+    background:var(--paper);
+    border:1px solid var(--line);
+    color:var(--muted);
+    white-space:nowrap;
+    transition:background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .chip.active{
+    background:var(--turquoise);
+    border-color:var(--turquoise);
+    color:#fff;
+  }
+
+  .search-box{
+    display:flex;
+    gap:8px;
+    margin-bottom:18px;
+  }
+  .search-box input, .search-box select{
+    flex:1;
+    padding:12px 13px;
+    border-radius:6px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    font-size:14px;
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+  }
+  .search-box input:focus, .search-box select:focus,
+  button:focus-visible, .chip:focus-visible, .tabbar button:focus-visible{
+    outline:2px solid var(--turquoise);
+    outline-offset:1px;
+  }
+  .search-box select{flex:0 0 128px;}
+
+  /* MANIFEST BOARD */
+  .board-wrap{max-width:920px;margin:0 auto;padding:0 20px 40px;}
+  .board-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:12px;
+  }
+  .board-head h2{
+    font-family:'Fraunces',serif;
+    font-size:18px;
+    font-weight:600;
+    margin:0;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .board-head h2::before{
+    content:"";
+    width:7px;height:7px;border-radius:50%;
+    background:var(--turquoise);
+    display:inline-block;
+  }
+  .board-head .count{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--muted);
+  }
+
+  /* Ticket-stub listing */
+  .listing{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:9px;
+    margin-bottom:12px;
+    display:flex;
+    animation:rise .35s ease both;
+    overflow:hidden;
+    box-shadow:0 1px 2px rgba(10,30,27,0.04);
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  @media (prefers-reduced-motion: reduce){.listing{animation:none;}}
+
+  .listing .stub{
+    flex:0 0 40px;
+    background:var(--abyss);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+  }
+  .listing.offre .stub{background:linear-gradient(180deg,var(--rust),#8A3517);}
+  .listing.recherche .stub{background:linear-gradient(180deg,var(--turquoise),var(--reef));}
+  .listing .stub .arrow{color:#fff;font-size:16px;font-weight:700;}
+  .listing .stub::after{
+    content:"";
+    position:absolute;
+    right:-1px;top:0;bottom:0;
+    width:1px;
+    background-image:linear-gradient(var(--paper) 50%, transparent 0%);
+    background-size:1px 8px;
+    background-repeat:repeat-y;
+  }
+
+  .listing .body{flex:1;min-width:0;padding:14px 15px;}
+  .listing-top{
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    align-items:baseline;
+  }
+  .listing h3{
+    font-family:'Fraunces',serif;
+    font-size:16px;
+    font-weight:600;
+    margin:0;
+    line-height:1.25;
+  }
+  .listing h3 .company{color:var(--muted);font-weight:400;font-size:13px;font-family:'Inter',sans-serif;}
+  .ref{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    color:var(--muted);
+    flex:0 0 auto;
+  }
+  .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin:8px 0 9px;
+  }
+  .tag{
+    font-size:10.5px;
+    padding:3px 8px;
+    border-radius:4px;
+    background:var(--salt);
+    color:var(--text);
+    font-weight:500;
+  }
+  .tag.sector{background:rgba(31,166,155,0.12);color:#0F7167;}
+  .desc{font-size:13px;color:var(--muted);line-height:1.5;margin:0 0 10px;}
+  .listing-foot{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-top:1px dashed var(--line);
+    padding-top:9px;
+  }
+  .listing-foot .salary{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--good);font-weight:600;}
+  .listing-foot .contact-btn{
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--turquoise);
+    padding:6px 11px;
+    border:1px solid var(--turquoise);
+    border-radius:5px;
+    transition:background .15s ease, color .15s ease;
+  }
+  .listing-foot .contact-btn:hover{background:var(--turquoise);color:#fff;}
+
+  .empty{
+    text-align:center;
+    padding:54px 20px;
+    color:var(--muted);
+  }
+  .empty .display{font-size:19px;color:var(--text);margin-bottom:6px;font-weight:600;}
+  .empty p{font-size:13px;max-width:280px;margin:0 auto;}
+
+  /* MODAL / FORM */
+  .overlay{
+    position:fixed;inset:0;
+    background:rgba(10,30,27,0.55);
+    display:none;
+    align-items:flex-end;
+    z-index:100;
+  }
+  .overlay.show{display:flex;}
+  .sheet{
+    background:var(--paper);
+    width:100%;
+    max-height:90vh;
+    overflow-y:auto;
+    border-radius:16px 16px 0 0;
+    padding:22px 20px 30px;
+    animation:slideup .25s ease;
+    border-top:3px solid var(--gold);
+  }
+  @keyframes slideup{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+  .sheet-head{
+    display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;
+  }
+  .sheet-head h2{font-family:'Fraunces',serif;font-size:20px;margin:0;font-weight:600;}
+  .sheet-head button{font-size:22px;color:var(--muted);line-height:1;padding:4px;}
+
+  .field{margin-bottom:14px;}
+  .field label{
+    display:block;font-size:12px;font-weight:600;color:var(--muted);
+    text-transform:uppercase;letter-spacing:0.03em;margin-bottom:5px;
+  }
+  .field input, .field select, .field textarea{
+    width:100%;padding:11px 12px;border-radius:6px;border:1px solid var(--line);
+    background:#fff;font-size:14px;font-family:'Inter',sans-serif;color:var(--text);
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{
+    outline:2px solid var(--turquoise);outline-offset:1px;border-color:var(--turquoise);
+  }
+  .field textarea{resize:vertical;min-height:70px;}
+  .field-row{display:flex;gap:10px;}
+  .field-row .field{flex:1;}
+
+  .submit-btn{
+    width:100%;padding:13px;border-radius:7px;background:var(--abyss);color:var(--salt);
+    font-weight:600;font-size:14px;margin-top:6px;
+  }
+  .submit-btn:disabled{opacity:0.6;}
+  .form-error{color:#B03A2E;font-size:12.5px;margin-top:-6px;margin-bottom:12px;}
+  .toast{
+    position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+    background:var(--abyss);color:var(--salt);padding:11px 18px;border-radius:7px;
+    font-size:13px;font-weight:500;z-index:200;opacity:0;transition:opacity .25s ease;
+    pointer-events:none;
+    border:1px solid var(--gold);
+  }
+  .toast.show{opacity:1;}
+
+  footer{
+    text-align:center;padding:24px 20px 34px;color:var(--muted);font-size:11px;
+  }
+  footer .coords{color:var(--muted);display:block;margin-top:4px;opacity:0.7;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-row">
+    <div class="brand-mark">
+      <div class="knot">D</div>
+      <div class="word">Djib<em>-</em>Shaqo</div>
+    </div>
+    <div class="coords">11.5721°N<br>43.1456°E</div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">Le tableau du port</div>
+  <h1>Chaque quai a<br><em>son équipage.</em></h1>
+  <p>Le tableau des offres et des disponibilités à Djibouti. Trouve ta mission ou publie ton besoin — sans intermédiaire.</p>
+  <div class="hero-actions">
+    <button class="btn btn-primary" onclick="openForm('offre')">Publier une offre</button>
+    <button class="btn btn-secondary" onclick="openForm('recherche')">Je suis disponible</button>
+  </div>
+  <div class="manifest-count">
+    <div><div class="num" id="count-offre">0</div><div class="lbl">Offres actives</div></div>
+    <div><div class="num" id="count-recherche">0</div><div class="lbl">Disponibles</div></div>
+  </div>
+</section>
+
+<div class="controls">
+  <div class="tabbar">
+    <button class="active" data-view="all" onclick="setView('all')">Tout</button>
+    <button data-view="offre" onclick="setView('offre')">Offres</button>
+    <button data-view="recherche" onclick="setView('recherche')">Disponibles</button>
+  </div>
+
+  <div class="search-box">
+    <input type="text" id="search" placeholder="Chercher un poste, un secteur…" oninput="render()">
+    <select id="cityFilter" onchange="render()">
+      <option value="">Toutes villes</option>
+    </select>
+  </div>
+
+  <div class="filter-row" id="sectorFilters"></div>
+</div>
+
+<div class="board-wrap">
+  <div class="board-head">
+    <h2>Tableau du quai</h2>
+    <span class="count" id="board-count">0 entrées</span>
+  </div>
+  <div id="board"></div>
+</div>
+
+<footer>
+  Djib-Shaqo — prototype de validation · les annonces sont visibles par tous les visiteurs
+  <span class="coords">DJIBOUTI · GOLFE D'ADEN</span>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<!-- FORM SHEET -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeForm()">
+  <div class="sheet">
+    <div class="sheet-head">
+      <h2 id="form-title">Publier une offre</h2>
+      <button onclick="closeForm()" aria-label="Fermer">&times;</button>
+    </div>
+    <div id="form-body"></div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, getDocs, doc, setDoc, query, orderBy }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCPFKmmyKdMe02cQ8f88r-oqLLULZx5nW8",
+    authDomain: "djib-shaqo.firebaseapp.com",
+    projectId: "djib-shaqo",
+    storageBucket: "djib-shaqo.firebasestorage.app",
+    messagingSenderId: "566547976525",
+    appId: "1:566547976525:web:2302ec4d6f38d87d266704"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  window.__db = getFirestore(app);
+  window.__fb = { collection, getDocs, doc, setDoc, query, orderBy };
+
+  window.__fbReady = true;
+  window.dispatchEvent(new Event('fb-ready'));
+</script>
+
+<script>
+const CITIES = ["Djibouti-ville","Balbala","Arta","Ali Sabieh","Dikhil","Tadjourah","Obock"];
+const SECTORS = ["Port & Logistique","Commerce","Bâtiment & Travaux","Hôtellerie & Restauration","Transport","Ménage & Aide à domicile","Informatique & Digital","Éducation","Santé","Autre"];
+const CONTRACT_TYPES = ["Temps plein","Temps partiel","Journalier","Mission ponctuelle"];
+
+let listings = [];
+let currentView = 'all';
+let activeSector = '';
+let formType = 'offre';
+
+function populateCityFilter(){
+  const sel = document.getElementById('cityFilter');
+  CITIES.forEach(c=>{
+    const o = document.createElement('option');
+    o.value = c; o.textContent = c;
+    sel.appendChild(o);
+  });
+}
+function populateSectorFilters(){
+  const wrap = document.getElementById('sectorFilters');
+  const all = document.createElement('button');
+  all.className = 'chip active';
+  all.textContent = 'Tous secteurs';
+  all.onclick = ()=>{activeSector='';renderChips();render();};
+  wrap.appendChild(all);
+  SECTORS.forEach(s=>{
+    const c = document.createElement('button');
+    c.className='chip';
+    c.textContent=s;
+    c.onclick = ()=>{activeSector = (activeSector===s)?'':s; renderChips(); render();};
+    wrap.appendChild(c);
+  });
+}
+function renderChips(){
+  const chips = document.querySelectorAll('#sectorFilters .chip');
+  chips.forEach(c=>{
+    if(c.textContent==='Tous secteurs'){
+      c.classList.toggle('active', activeSector==='');
+    } else {
+      c.classList.toggle('active', c.textContent===activeSector);
+    }
+  });
+}
+function setView(v){
+  currentView = v;
+  document.querySelectorAll('.tabbar button').forEach(b=>b.classList.toggle('active', b.dataset.view===v));
+  render();
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+async function loadListings(){
+  try{
+    const { collection, getDocs, query, orderBy } = window.__fb;
+    const q = query(collection(window.__db, 'listings'), orderBy('createdAt', 'desc'));
+    const snap = await getDocs(q);
+    listings = snap.docs.map(d => d.data());
+  }catch(e){
+    console.error('Erreur de chargement', e);
+    listings = [];
+  }
+  render();
+}
+
+async function saveListing(listing){
+  const { doc, setDoc } = window.__fb;
+  await setDoc(doc(window.__db, 'listings', listing.id), listing);
+}
+
+function openForm(type){
+  formType = type;
+  document.getElementById('form-title').textContent = type==='offre' ? 'Publier une offre' : 'Se déclarer disponible';
+  const body = document.getElementById('form-body');
+
+  const cityOptions = CITIES.map(c=>`<option value="${c}">${c}</option>`).join('');
+  const sectorOptions = SECTORS.map(s=>`<option value="${s}">${s}</option>`).join('');
+  const contractOptions = CONTRACT_TYPES.map(t=>`<option value="${t}">${t}</option>`).join('');
+
+  if(type==='offre'){
+    body.innerHTML = `
+      <div class="field"><label>Intitulé du poste</label><input id="f-title" placeholder="Ex. Chauffeur livreur"></div>
+      <div class="field"><label>Nom de l'entreprise (optionnel)</label><input id="f-company" placeholder="Ex. Transit Rouge"></div>
+      <div class="field-row">
+        <div class="field"><label>Secteur</label><select id="f-sector">${sectorOptions}</select></div>
+        <div class="field"><label>Ville</label><select id="f-city">${cityOptions}</select></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Type de contrat</label><select id="f-contract">${contractOptions}</select></div>
+        <div class="field"><label>Salaire (optionnel)</label><input id="f-salary" placeholder="Ex. 25 000 FDJ/mois"></div>
+      </div>
+      <div class="field"><label>Description</label><textarea id="f-desc" placeholder="Missions, exigences, horaires…"></textarea></div>
+      <div class="field"><label>Contact (téléphone / WhatsApp)</label><input id="f-contact" placeholder="Ex. +253 77 00 00 00"></div>
+      <div class="form-error" id="f-error" style="display:none;"></div>
+      <button class="submit-btn" onclick="submitForm()">Publier l'offre</button>
+    `;
+  } else {
+    body.innerHTML = `
+      <div class="field"><label>Nom</label><input id="f-title" placeholder="Ex. Ahmed Hassan"></div>
+      <div class="field"><label>Compétence / métier recherché</label><input id="f-company" placeholder="Ex. Maçon, Vendeur, Réceptionniste…"></div>
+      <div class="field-row">
+        <div class="field"><label>Secteur</label><select id="f-sector">${sectorOptions}</select></div>
+        <div class="field"><label>Ville</label><select id="f-city">${cityOptions}</select></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Disponibilité</label><select id="f-contract">${contractOptions}</select></div>
+        <div class="field"><label>Prétention (optionnel)</label><input id="f-salary" placeholder="Ex. À négocier"></div>
+      </div>
+      <div class="field"><label>À propos</label><textarea id="f-desc" placeholder="Expérience, compétences, langues parlées…"></textarea></div>
+      <div class="field"><label>Contact (téléphone / WhatsApp)</label><input id="f-contact" placeholder="Ex. +253 77 00 00 00"></div>
+      <div class="form-error" id="f-error" style="display:none;"></div>
+      <button class="submit-btn" onclick="submitForm()">Publier ma disponibilité</button>
+    `;
+  }
+
+  document.getElementById('overlay').classList.add('show');
+}
+
+function closeForm(){
+  document.getElementById('overlay').classList.remove('show');
+}
+
+async function submitForm(){
+  const title = document.getElementById('f-title').value.trim();
+  const company = document.getElementById('f-company').value.trim();
+  const sector = document.getElementById('f-sector').value;
+  const city = document.getElementById('f-city').value;
+  const contract = document.getElementById('f-contract').value;
+  const salary = document.getElementById('f-salary').value.trim();
+  const desc = document.getElementById('f-desc').value.trim();
+  const contact = document.getElementById('f-contact').value.trim();
+  const errBox = document.getElementById('f-error');
+
+  if(!title || !contact){
+    errBox.textContent = 'Le titre et le contact sont obligatoires.';
+    errBox.style.display = 'block';
+    return;
+  }
+  errBox.style.display = 'none';
+
+  const btn = document.querySelector('.submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Publication…';
+
+  const listing = {
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+    type: formType,
+    title, company, sector, city, contract, salary, desc, contact,
+    createdAt: Date.now()
+  };
+
+  try{
+    await saveListing(listing);
+    listings.unshift(listing);
+    render();
+    closeForm();
+    showToast(formType==='offre' ? 'Offre publiée sur le quai.' : 'Ta disponibilité est publiée.');
+  }catch(e){
+    errBox.textContent = "La publication a échoué. Réessaie.";
+    errBox.style.display = 'block';
+  }
+  btn.disabled = false;
+  btn.textContent = formType==='offre' ? "Publier l'offre" : 'Publier ma disponibilité';
+}
+
+function render(){
+  const board = document.getElementById('board');
+  const search = document.getElementById('search').value.toLowerCase();
+  const city = document.getElementById('cityFilter').value;
+
+  let filtered = listings.filter(l=>{
+    if(currentView!=='all' && l.type!==currentView) return false;
+    if(activeSector && l.sector!==activeSector) return false;
+    if(city && l.city!==city) return false;
+    if(search){
+      const hay = (l.title+' '+l.company+' '+l.sector+' '+l.desc).toLowerCase();
+      if(!hay.includes(search)) return false;
+    }
+    return true;
+  });
+
+  document.getElementById('board-count').textContent = filtered.length + (filtered.length>1 ? ' entrées' : ' entrée');
+  document.getElementById('count-offre').textContent = listings.filter(l=>l.type==='offre').length;
+  document.getElementById('count-recherche').textContent = listings.filter(l=>l.type==='recherche').length;
+
+  if(filtered.length===0){
+    board.innerHTML = `
+      <div class="empty">
+        <div class="display">Le quai est vide pour l'instant.</div>
+        <p>Publie une offre ou déclare-toi disponible — tu seras la première entrée du tableau.</p>
+      </div>`;
+    return;
+  }
+
+  board.innerHTML = filtered.map(l=>{
+    const ref = 'DJ-' + l.id.slice(-4).toUpperCase();
+    const dirIcon = l.type==='offre' ? '↓' : '↑';
+    return `
+      <div class="listing ${l.type}">
+        <div class="stub"><span class="arrow">${dirIcon}</span></div>
+        <div class="body">
+          <div class="listing-top">
+            <h3>${escapeHtml(l.title)}${l.company ? ' <span class="company">— '+escapeHtml(l.company)+'</span>' : ''}</h3>
+            <span class="ref mono">${ref}</span>
+          </div>
+          <div class="meta-row">
+            <span class="tag sector">${l.sector}</span>
+            <span class="tag">${l.city}</span>
+            <span class="tag">${l.contract}</span>
+          </div>
+          ${l.desc ? `<p class="desc">${escapeHtml(l.desc)}</p>` : ''}
+          <div class="listing-foot">
+            <span class="salary">${l.salary ? escapeHtml(l.salary) : ' '}</span>
+            <a class="contact-btn" href="tel:${encodeURIComponent(l.contact)}">Contacter</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+
+populateCityFilter();
+populateSectorFilters();
+
+if(window.__fbReady){
+  loadListings();
+} else {
+  window.addEventListener('fb-ready', loadListings, { once:true });
+}
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(e=>console.log('SW erreur', e));
+  });
+}
+</script>
+</body>
+</html>
