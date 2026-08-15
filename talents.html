@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Talents - Djib-Shaqo</title>
+<link rel="icon" href="icons/icon-192.png">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;1,600&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --abyss:#0A1E1B;
+    --reef:#123A35;
+    --turquoise:#1FA69B;
+    --turquoise-light:#7DD9CE;
+    --rust:#A8431C;
+    --rust-light:#D06A3E;
+    --gold:#C69A3C;
+    --salt:#F5F0E1;
+    --paper:#FFFDF7;
+    --text:#15241F;
+    --muted:#5C6E66;
+    --line:#E1D8C2;
+    --good:#2F7A4F;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-tap-highlight-color:transparent;}
+  body{margin:0;background:var(--salt);color:var(--text);font-family:'Inter',sans-serif;padding-bottom:60px;}
+  a,button{font-family:inherit;}
+  button{cursor:pointer;border:none;background:none;}
+
+  header{background:var(--abyss);color:var(--salt);padding:16px 20px 20px;position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(125,217,206,0.2);}
+  .header-row{display:flex;align-items:center;gap:12px;}
+  .back-btn{color:var(--turquoise-light);text-decoration:none;font-size:22px;}
+  header h1{font-family:'Fraunces',serif;font-size:19px;margin:0;flex:1;}
+
+  .hero{background:var(--reef);color:var(--salt);padding:28px 20px 32px;}
+  .hero .eyebrow{color:var(--gold);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;}
+  .hero h2{font-family:'Fraunces',serif;font-size:26px;margin:0 0 10px;line-height:1.25;}
+  .hero p{color:var(--turquoise-light);opacity:0.9;font-size:14px;margin:0;}
+
+  .tabs{display:flex;background:var(--paper);border-bottom:1px solid var(--line);}
+  .tab{flex:1;padding:14px;text-align:center;font-weight:600;font-size:14px;color:var(--muted);border-bottom:3px solid transparent;}
+  .tab.active{color:var(--text);border-bottom-color:var(--turquoise);}
+
+  .section{padding:20px;}
+
+  /* FORM */
+  .form-card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:20px;display:none;}
+  .form-card.show{display:block;}
+  .form-card h3{font-family:'Fraunces',serif;font-size:18px;margin:0 0 16px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;}
+  .field input, .field select, .field textarea{
+    width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:8px;
+    font-size:14px;background:#fff;color:var(--text);font-family:inherit;
+  }
+  .field textarea{resize:vertical;min-height:60px;}
+  .row2{display:flex;gap:10px;}
+  .row2 .field{flex:1;}
+  .avail-toggle{display:flex;gap:8px;}
+  .avail-btn{flex:1;padding:10px;border:1px solid var(--line);border-radius:8px;font-size:13px;font-weight:600;color:var(--muted);}
+  .avail-btn.selected-yes{background:var(--good);color:#fff;border-color:var(--good);}
+  .avail-btn.selected-no{background:var(--rust);color:#fff;border-color:var(--rust);}
+  .submit-btn{width:100%;padding:13px;background:var(--turquoise);color:#fff;border-radius:9px;font-weight:700;font-size:15px;margin-top:6px;}
+  .submit-btn:disabled{opacity:0.6;}
+  .form-msg{font-size:13px;margin-top:10px;text-align:center;}
+
+  /* SEARCH */
+  .search-box{margin-bottom:14px;}
+  .search-box input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;font-size:14px;background:#fff;}
+  .filters{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:16px;}
+  .filters select{flex-shrink:0;padding:9px 12px;border:1px solid var(--line);border-radius:20px;font-size:13px;background:#fff;color:var(--text);}
+
+  .count{font-size:13px;color:var(--muted);margin-bottom:12px;}
+
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;}
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .card-name{font-family:'Fraunces',serif;font-size:17px;font-weight:600;margin:0 0 3px;}
+  .card-role{color:var(--turquoise);font-weight:600;font-size:13px;}
+  .badge{font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px;white-space:nowrap;}
+  .badge.avail{background:rgba(47,122,79,0.12);color:var(--good);}
+  .badge.unavail{background:rgba(168,67,28,0.1);color:var(--rust);}
+  .card-meta{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;font-size:12.5px;color:var(--muted);}
+  .card-meta span{display:flex;align-items:center;gap:4px;}
+  .card-skills{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+  .skill-chip{background:var(--reef);color:var(--turquoise-light);font-size:11.5px;padding:4px 10px;border-radius:20px;}
+  .card-contact{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);font-size:13px;color:var(--muted);}
+  .empty{text-align:center;padding:50px 20px;color:var(--muted);font-size:14px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-row">
+    <a href="index.html" class="back-btn">&larr;</a>
+    <h1>Djib-Shaqo — Talents</h1>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="eyebrow">Recrutement direct</div>
+  <h2>Trouvez les talents dont vous avez besoin.</h2>
+  <p>Chauffeurs, logisticiens, comptables, vendeurs — les profils disponibles à Djibouti, sans intermédiaire.</p>
+</div>
+
+<div class="tabs">
+  <button class="tab active" id="tabSearch" onclick="switchTab('search')">Rechercher</button>
+  <button class="tab" id="tabForm" onclick="switchTab('form')">Créer mon profil</button>
+</div>
+
+<div class="section">
+
+  <!-- FORM -->
+  <div class="form-card" id="formCard">
+    <h3>Créer mon profil candidat</h3>
+    <div class="field">
+      <label>Nom complet</label>
+      <input type="text" id="f_name" placeholder="Ex: Mohamed Farah">
+    </div>
+    <div class="field">
+      <label>Métier recherché</label>
+      <input type="text" id="f_role" placeholder="Ex: Chauffeur livreur, Comptable...">
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>Ville</label>
+        <select id="f_city"></select>
+      </div>
+      <div class="field">
+        <label>Expérience</label>
+        <select id="f_exp">
+          <option value="Débutant">Débutant</option>
+          <option value="1-2 ans">1-2 ans</option>
+          <option value="3-5 ans">3-5 ans</option>
+          <option value="5+ ans">5+ ans</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Compétences (séparées par des virgules)</label>
+      <input type="text" id="f_skills" placeholder="Ex: Permis B, Excel, Anglais">
+    </div>
+    <div class="field">
+      <label>Langues parlées</label>
+      <input type="text" id="f_langs" placeholder="Ex: Français, Somali, Anglais">
+    </div>
+    <div class="field">
+      <label>Diplôme / Niveau d'études</label>
+      <input type="text" id="f_edu" placeholder="Ex: Licence en logistique">
+    </div>
+    <div class="field">
+      <label>Disponibilité</label>
+      <div class="avail-toggle">
+        <button type="button" class="avail-btn" id="btnAvailYes" onclick="setAvail(true)">🟢 Disponible</button>
+        <button type="button" class="avail-btn" id="btnAvailNo" onclick="setAvail(false)">🔴 Pas disponible</button>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>Téléphone</label>
+        <input type="tel" id="f_phone" placeholder="+253...">
+      </div>
+      <div class="field">
+        <label>Email (optionnel)</label>
+        <input type="email" id="f_email" placeholder="email@exemple.com">
+      </div>
+    </div>
+    <button class="submit-btn" id="submitBtn" onclick="submitProfile()">Publier mon profil</button>
+    <div class="form-msg" id="formMsg"></div>
+  </div>
+
+  <!-- SEARCH -->
+  <div id="searchView">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Rechercher un métier, une compétence..." oninput="renderList()">
+    </div>
+    <div class="filters">
+      <select id="filterCity" onchange="renderList()"><option value="">Toutes villes</option></select>
+      <select id="filterAvail" onchange="renderList()">
+        <option value="">Disponibilité</option>
+        <option value="yes">🟢 Disponible</option>
+        <option value="no">🔴 Pas disponible</option>
+      </select>
+      <select id="filterExp" onchange="renderList()">
+        <option value="">Expérience</option>
+        <option value="Débutant">Débutant</option>
+        <option value="1-2 ans">1-2 ans</option>
+        <option value="3-5 ans">3-5 ans</option>
+        <option value="5+ ans">5+ ans</option>
+      </select>
+    </div>
+    <div class="count" id="resultCount"></div>
+    <div id="listContainer"></div>
+  </div>
+
+</div>
+
+<script>
+  const CITIES = ["Djibouti-Ville","Balbala","Doraleh","Damerjog","Ali Sabieh","Tadjourah","Obock","Dikhil","Arta"];
+  let selectedAvail = null;
+  let allProfiles = [];
+
+  function populateCities(){
+    const f = document.getElementById('f_city');
+    const filt = document.getElementById('filterCity');
+    CITIES.forEach(c=>{
+      f.innerHTML += `<option value="${c}">${c}</option>`;
+      filt.innerHTML += `<option value="${c}">${c}</option>`;
+    });
+  }
+  populateCities();
+
+  function switchTab(tab){
+    document.getElementById('tabSearch').classList.toggle('active', tab==='search');
+    document.getElementById('tabForm').classList.toggle('active', tab==='form');
+    document.getElementById('formCard').classList.toggle('show', tab==='form');
+    document.getElementById('searchView').style.display = tab==='search' ? 'block' : 'none';
+  }
+
+  function setAvail(val){
+    selectedAvail = val;
+    document.getElementById('btnAvailYes').classList.toggle('selected-yes', val===true);
+    document.getElementById('btnAvailNo').classList.toggle('selected-no', val===false);
+  }
+
+  async function submitProfile(){
+    const name = document.getElementById('f_name').value.trim();
+    const role = document.getElementById('f_role').value.trim();
+    const city = document.getElementById('f_city').value;
+    const phone = document.getElementById('f_phone').value.trim();
+    const msg = document.getElementById('formMsg');
+
+    if(!name || !role || !phone){
+      msg.style.color = 'var(--rust)';
+      msg.textContent = 'Merci de remplir au moins le nom, le métier et le téléphone.';
+      return;
+    }
+    if(selectedAvail === null){
+      msg.style.color = 'var(--rust)';
+      msg.textContent = 'Merci de choisir ta disponibilité.';
+      return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Publication...';
+
+    const profile = {
+      name,
+      role,
+      city,
+      exp: document.getElementById('f_exp').value,
+      skills: document.getElementById('f_skills').value.split(',').map(s=>s.trim()).filter(Boolean),
+      langs: document.getElementById('f_langs').value.trim(),
+      edu: document.getElementById('f_edu').value.trim(),
+      available: selectedAvail,
+      phone,
+      email: document.getElementById('f_email').value.trim(),
+      createdAt: Date.now()
+    };
+
+    try{
+      await waitForFirebase();
+      const id = 'c_' + Date.now();
+      const ref = window.__fb.doc(window.__db, 'candidates', id);
+      await window.__fb.setDoc(ref, profile);
+      msg.style.color = 'var(--good)';
+      msg.textContent = '✅ Profil publié avec succès !';
+      document.querySelectorAll('#formCard input, #formCard select').forEach(el=>el.value='');
+      setAvail(null);
+      selectedAvail = null;
+      loadProfiles();
+      setTimeout(()=>switchTab('search'), 1200);
+    }catch(err){
+      msg.style.color = 'var(--rust)';
+      msg.textContent = 'Erreur : ' + err.message;
+    }
+    btn.disabled = false;
+    btn.textContent = 'Publier mon profil';
+  }
+
+  function waitForFirebase(){
+    return new Promise(resolve=>{
+      if(window.__fbReady) return resolve();
+      window.addEventListener('fb-ready', ()=>resolve(), {once:true});
+    });
+  }
+
+  async function loadProfiles(){
+    await waitForFirebase();
+    const snap = await window.__fb.getDocs(window.__fb.collection(window.__db, 'candidates'));
+    allProfiles = [];
+    snap.forEach(d=>allProfiles.push({id:d.id, ...d.data()}));
+    allProfiles.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    renderList();
+  }
+
+  function renderList(){
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const city = document.getElementById('filterCity').value;
+    const avail = document.getElementById('filterAvail').value;
+    const exp = document.getElementById('filterExp').value;
+
+    let filtered = allProfiles.filter(p=>{
+      const matchQ = !q || p.role.toLowerCase().includes(q) || (p.skills||[]).some(s=>s.toLowerCase().includes(q)) || p.name.toLowerCase().includes(q);
+      const matchCity = !city || p.city === city;
+      const matchAvail = !avail || (avail==='yes' ? p.available : !p.available);
+      const matchExp = !exp || p.exp === exp;
+      return matchQ && matchCity && matchAvail && matchExp;
+    });
+
+    document.getElementById('resultCount').textContent = filtered.length + (filtered.length>1 ? ' profils trouvés' : ' profil trouvé');
+
+    const container = document.getElementById('listContainer');
+    if(filtered.length===0){
+      container.innerHTML = '<div class="empty">Aucun profil ne correspond à ta recherche.<br>Sois le premier à publier le tien !</div>';
+      return;
+    }
+
+    container.innerHTML = filtered.map(p=>`
+      <div class="card">
+        <div class="card-top">
+          <div>
+            <p class="card-name">${escapeHtml(p.name)}</p>
+            <p class="card-role">${escapeHtml(p.role)}</p>
+          </div>
+          <span class="badge ${p.available?'avail':'unavail'}">${p.available?'🟢 Disponible':'🔴 Indisponible'}</span>
+        </div>
+        <div class="card-meta">
+          ${p.city ? `<span>📍 ${escapeHtml(p.city)}</span>` : ''}
+          ${p.exp ? `<span>💼 ${escapeHtml(p.exp)}</span>` : ''}
+          ${p.langs ? `<span>🗣️ ${escapeHtml(p.langs)}</span>` : ''}
+          ${p.edu ? `<span>🎓 ${escapeHtml(p.edu)}</span>` : ''}
+        </div>
+        ${(p.skills&&p.skills.length) ? `<div class="card-skills">${p.skills.map(s=>`<span class="skill-chip">${escapeHtml(s)}</span>`).join('')}</div>` : ''}
+        <div class="card-contact">📞 ${escapeHtml(p.phone)}${p.email ? ' · ✉️ '+escapeHtml(p.email) : ''}</div>
+      </div>
+    `).join('');
+  }
+
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.textContent = str||'';
+    return d.innerHTML;
+  }
+
+  loadProfiles();
+</script>
+
+</body>
+</html>
